@@ -1,0 +1,4 @@
+.idea/
+__pycache__/
+markdown_sample.md
+linter.sh
