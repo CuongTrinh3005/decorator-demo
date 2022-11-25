@@ -5,6 +5,7 @@ from ..service.user_service import get_a_user
 from ..service.user_service import get_all_users
 from ..service.user_service import save_new_user
 from ..util.decorators import admin_token_required
+from ..util.decorators import cache_it
 from ..util.decorators import log_it
 from ..util.decorators import time_it
 from ..util.decorators import token_required
@@ -47,6 +48,7 @@ class User(Resource):
     @token_required
     @time_it
     @log_it
+    @cache_it
     def get(self, public_id):
         """get a user given its identifier"""
         user = get_a_user(public_id)
