@@ -2,6 +2,7 @@ from flask import request
 from flask_restx import Resource
 
 from app.main.service.auth_helper import Auth
+from ..util.decorators import time_it
 
 from ..util.dto import AuthDto
 
@@ -18,6 +19,7 @@ class UserLogin(Resource):
 
     @api.doc("user login")
     @api.expect(user_auth, validate=True)
+    @time_it
     def post(self):
         # get the post data
         post_data = request.json
@@ -31,6 +33,7 @@ class LogoutAPI(Resource):
     """
 
     @api.doc("logout a user")
+    @time_it
     def post(self):
         # get auth token
         auth_header = request.headers.get("Authorization")

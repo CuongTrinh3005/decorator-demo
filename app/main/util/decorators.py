@@ -1,3 +1,5 @@
+import time
+
 from flask import request
 from functools import wraps
 
@@ -31,3 +33,14 @@ def admin_token_required(func):
         return func(*args, **kwargs)
 
     return decorated
+
+
+def time_it(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print('%r - %.6f ms' % (func.__qualname__, (end_time - start_time) * 1000))
+        return result
+    return wrapper
