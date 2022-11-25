@@ -4,7 +4,7 @@ from flask_restx import Resource
 from ..service.user_service import get_a_user
 from ..service.user_service import get_all_users
 from ..service.user_service import save_new_user
-from ..util.decorators import admin_token_required
+from ..util.decorators import admin_token_required, time_it
 from ..util.decorators import token_required
 from ..util.dto import UserDto
 
@@ -18,6 +18,7 @@ class UserList(Resource):
     @api.doc("list_of_registered_users")
     @api.marshal_list_with(_user, envelope="data")
     @admin_token_required
+    @time_it
     def get(self):
         """List all registered users"""
         return get_all_users()
@@ -26,6 +27,7 @@ class UserList(Resource):
     @api.doc("create a new user")
     @api.expect(_user, validate=True)
     @admin_token_required
+    @time_it
     def post(self):
         """Creates a new User"""
         data = request.json
@@ -39,6 +41,7 @@ class User(Resource):
     @api.doc("get a user")
     @api.marshal_with(_user)
     @token_required
+    @time_it
     def get(self, public_id):
         """get a user given its identifier"""
         user = get_a_user(public_id)
