@@ -1,5 +1,5 @@
+import logging
 import time
-
 from flask import request
 from functools import wraps
 
@@ -41,6 +41,60 @@ def time_it(func):
         start_time = time.time()
         result = func(*args, **kwargs)
         end_time = time.time()
-        print('%r - %.6f ms' % (func.__qualname__, (end_time - start_time) * 1000))
+        print("%r - %.6f ms" % (func.__qualname__, (end_time - start_time) * 1000))
         return result
+
     return wrapper
+
+
+def log_it(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        logging.basicConfig(
+            filename="logs/app.log",
+            level=logging.INFO,
+            format="%(asctime)s:%(levelname)s:%(name)s:%(message)s",
+        )
+        logging.getLogger().setLevel(logging.INFO)
+        try:
+            user_data, _ = Auth.get_logged_in_user(request)
+            user = user_data.get("data")
+            username = user.get("username")
+            logging.info(f"User '{username}' used {func.__qualname__}")
+            result = func(*args, **kwargs)
+            return result
+        except Exception as e:
+            logging.exception(
+                f"Exception raised in {func.__name__} exception: {str(e)}"
+            )
+            raise e
+
+    return wrapper
+
+
+def log_it_with_file_specified(logfile="logs/app.log"):
+    def logging_decorator(func):
+        @wraps(func)
+        def wrapped_function(*args, **kwargs):
+            logging.basicConfig(
+                filename=logfile,
+                level=logging.INFO,
+                format="%(asctime)s:%(levelname)s:%(name)s:%(message)s",
+            )
+            logging.getLogger().setLevel(logging.INFO)
+            try:
+                user_data, _ = Auth.get_logged_in_user(request)
+                user = user_data.get("data")
+                username = user.get("username")
+                logging.info(f"User '{username}' used {func.__qualname__}")
+                result = func(*args, **kwargs)
+                return result
+            except Exception as e:
+                logging.exception(
+                    f"Exception raised in {func.__name__} exception: {str(e)}"
+                )
+                raise e
+
+        return wrapped_function
+
+    return logging_decorator
