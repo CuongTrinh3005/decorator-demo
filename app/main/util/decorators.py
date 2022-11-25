@@ -98,3 +98,18 @@ def log_it_with_file_specified(logfile="logs/app.log"):
         return wrapped_function
 
     return logging_decorator
+
+
+def cache_it(func):
+    memo = {}
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return memo[args]
+        except KeyError:
+            result = func(*args, **kwargs)
+            memo[args] = result
+            return result
+
+    return wrapper
