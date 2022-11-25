@@ -1,10 +1,12 @@
+import time
+
 from flask import request
 from flask_restx import Resource
 
 from ..service.user_service import get_a_user
 from ..service.user_service import get_all_users
 from ..service.user_service import save_new_user
-from ..util.decorators import admin_token_required
+from ..util.decorators import admin_token_required, synchronized
 from ..util.decorators import cache_it
 from ..util.decorators import log_it
 from ..util.decorators import time_it
@@ -49,9 +51,11 @@ class User(Resource):
     @time_it
     @log_it
     @cache_it
+    @synchronized
     def get(self, public_id):
         """get a user given its identifier"""
         user = get_a_user(public_id)
+        # time.sleep(3)
         if not user:
             api.abort(404)
         else:

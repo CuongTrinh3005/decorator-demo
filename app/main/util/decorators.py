@@ -1,4 +1,5 @@
 import logging
+import threading
 import time
 from flask import request
 from functools import wraps
@@ -112,4 +113,15 @@ def cache_it(func):
             memo[args] = result
             return result
 
+    return wrapper
+
+
+def synchronized(func):
+    lock = threading.Lock()
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print("Calling '%s' with Lock %s" % (func.__qualname__, id(lock)))
+        with lock:
+            return func(*args, **kwargs)
     return wrapper
