@@ -61,6 +61,7 @@ class Auth:
                         "user_id": user.id,
                         "email": user.email,
                         "admin": user.admin,
+                        "username": user.username,
                         "registered_on": str(user.registered_on),
                     },
                 }

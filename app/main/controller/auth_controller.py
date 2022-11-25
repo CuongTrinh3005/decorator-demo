@@ -2,8 +2,10 @@ from flask import request
 from flask_restx import Resource
 
 from app.main.service.auth_helper import Auth
-from ..util.decorators import time_it
 
+from ..util.decorators import log_it
+from ..util.decorators import log_it_with_file_specified
+from ..util.decorators import time_it
 from ..util.dto import AuthDto
 
 
@@ -34,6 +36,7 @@ class LogoutAPI(Resource):
 
     @api.doc("logout a user")
     @time_it
+    @log_it_with_file_specified(logfile="logs/out.log")
     def post(self):
         # get auth token
         auth_header = request.headers.get("Authorization")

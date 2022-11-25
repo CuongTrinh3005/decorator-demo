@@ -1,4 +1,8 @@
+# Folders
 .idea/
 __pycache__/
+logs/
+
+# Files
 markdown_sample.md
 linter.sh
