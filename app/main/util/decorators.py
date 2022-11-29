@@ -1,3 +1,4 @@
+import datetime
 import logging
 import threading
 import time
@@ -28,6 +29,7 @@ def admin_token_required(func):
             return user_data, status
 
         if not user.get("admin"):
+            print("Run here")
             response = {"message": "Admin token is needed", "status": "fail"}
             return response, 403
 
@@ -121,7 +123,7 @@ def synchronized(func):
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-        print("Calling '%s' with Lock %s" % (func.__qualname__, id(lock)))
+        print("Calling '%s' with Lock %s at timestamp %s" % (func.__qualname__, id(lock), datetime.datetime.now()))
         with lock:
             return func(*args, **kwargs)
     return wrapper
